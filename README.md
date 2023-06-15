@@ -295,7 +295,7 @@ considere necesarios.
 
 ## Este proyecto consta de DOS partes
 
-### 1) JavaScript API
+### 1 JavaScript API
 
 El módulo debe poder **importarse** en otros scripts de Node.js y debe ofrecer la
 siguiente interfaz:
