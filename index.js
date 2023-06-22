@@ -12,7 +12,7 @@ const {
 } = require("./functions");
 
 function mdLinks(path, options) {
-  return new Promise(function (resolve, reject) {
+  const newPromise = new Promise(function (resolve, reject) {
     const resolveIsAbsolute = isAbsolute(path) ? path : converterAbsolute(path);
 
     if (existPath(resolveIsAbsolute)) {
@@ -66,6 +66,7 @@ function mdLinks(path, options) {
       reject("La ruta no existe");
     }
   });
+ return newPromise;
 }
 
 const path = "prueba";
@@ -79,6 +80,7 @@ resultFunction
   .catch(function (error) {
     console.log(error);
   });
+
 
 module.exports = {
   mdLinks,
