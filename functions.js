@@ -1,8 +1,14 @@
-const { error } = require("console");
+//fs biblioteca de node.js
 const fs = require("fs");
+//para utilizar funciones de manejo de promesas
 const promise = require("fs/promises");
+//modulo para acceder a funciones que permiten manipular archivos y directorios
 const path = require("path");
-//const markdownIt = require('markdown-it')
+// JSDOM, biblioteca para la manipulacion del DOM
+const { JSDOM } = require("jsdom");
+//biblioteca para analizar y renderizar markdown
+const markdownIt = require("markdown-it");
+const colors = require("colors");
 
 //validar ruta si es absoluta
 const isAbsolute = (route) => path.isAbsolute(route);
@@ -22,7 +28,7 @@ const isADirectory = (route) => fs.statSync(route).isDirectory();
 // ir uniendo por .push las rutas de los archivos del directorio .
 const readDirectory = (route) => {
   return new Promise((resolve, reject) => {
-    const generalRead = fs.readdir(route, "utf8", (error, routes) => {
+   fs.readdir(route, "utf8", (error, routes) => {
       if (error) {
         reject(error);
       } else {
@@ -30,7 +36,7 @@ const readDirectory = (route) => {
         routes.forEach((file) => {
           const resultExt = path.extname(file);
           if (resultExt === ".md") {
-            const routeAbsolute = path.resolve(file);
+            const routeAbsolute = path.resolve(route, file);
             arrayRoute.push(routeAbsolute);
           }
         });
@@ -40,38 +46,121 @@ const readDirectory = (route) => {
   });
 };
 
-readDirectory("C:/Users/wader/Documents/DEV006-md-links/index.js")
-.then((arrayRoute)=>{
-console.log('las rutas son:',arrayRoute);
-}).catch((error)=>{
-console.log('se genero un error',error);
-})
+//validar la extensión
+const isMd = (route) => {
+  const pathRut = path.extname(route);
+  if (pathRut === ".md") {
+    return true;
+  }
+  else{
+    return false;
+  }
+};
 
-// const readDirectory = (route) => {
-//   const generalRead = fs.readdirSync(route, "utf8");
-//   const arrayRoute = [];
-//   if (generalRead) {
-//     generalRead.forEach((route) => {
-//       resultExt = path.extname(route);
-//       if (resultExt === ".md") {
-//         const routeAbsolute = path.resolve(route);
-//         arrayRoute.push(routeAbsolute);
-//       } else {
-//         return null;
-//       }
-//     });
-//   }
-//   console.log(arrayRoute);
-// };
+//leer contenido del archivo  de extension .md
 
+const readAFile = (route) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(route, "utf8", (err, data) => {
+      if (err) {
+        reject(err);
+      } else data;
+      resolve(data);
+    });
+  });
+};
 
+//funcion para extraer links del archivo .md
+const extractLinks = (data, file) => {
+  const md = markdownIt();
+  const renderFile = md.render(data);
+  const dom = new JSDOM(renderFile);
+  const allLinks = [];
+  const { document } = dom.window;
+  const links = document.querySelectorAll("a");
+  links.forEach((link) => {
+    const href = link.getAttribute("href");
+    const text = link.textContent.slice(0, 50);
+    if (href.startsWith("http")) {
+      allLinks.push({ href, text, file });
+    }
+  });
+  return allLinks;
+};
+//function para validar los links
+const verifyLinks = (links) => {
+  //console.log(links);
+  const arrayPromise = links.map((link) => {
+    return new Promise((resolve, reject) => {
+      fetch(link.href)
+        .then((response) => {
+          const arrayResult = {
+            Ruta: link.file,
+            Text: link.text,
+            Link: link.href,
+            Code: response.status === 200 ? 200 : 400,
+            Status: response.status === 200 ? "OK" : "FAIL",
+          };
+          //console.log(colors.red.bgBlue('Hello world!'));
+          resolve(arrayResult);
+        })
+        .catch((error) => {
+          const arrayResult = {
+            Ruta: link.file,
+            Text: link.text,
+            Link: link.href,
+            Code: error.name,
+            Status: error.message,
+          };
+          resolve(arrayResult);
+        });
+    });
+  });
+  return Promise.all(arrayPromise);
+};
+const prueba = [
+  {
+    href: "tps://developer.mozilla.org/es/docs/Web/HTTP/Messages",
+    text: "Mensajes HTTP - MDN",
+    file: "prueba",
+  },
+  {
+    href: "https://developer.mozilla.org/es/docs/Web/HTTP/Status",
+    text: "Códigos de estado de respuesta HTTP - MDN",
+    file: "prueba",
+  },
+  {
+    href: "https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5",
+    text: "The Complete Guide to Status Codes for Meaningful ",
+    file: "prueba",
+  },
+];
+// const pruebaOne = verifyLinks(prueba);
+// pruebaOne
+//   .then((result) => {
+// console.log(result);
+//   })
+//    .catch((error) => {
+//     console.log(error);
+//   });
 
-// //validar si tiene extension .md
-// const isMd = (route)=> {
-// const result= path.extname(route)
-// if (result==='.md'){
+// readAFile("C:/Users/wader/Documents/DEV006-md-links/prueba/textoOne.md")
+//   .then((result) => {
+//     console.log(extractLinks(result,'prueba'));
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 
-// console.log(true);
-// }
-// else{console.log(null);}
-// }
+module.exports = {
+  isAbsolute,
+  converterAbsolute,
+  existPath,
+  isAFile,
+  isADirectory,
+  readDirectory,
+  isMd,
+  readAFile,
+  extractLinks,
+  verifyLinks,
+};
