@@ -4,11 +4,11 @@ const {
   existPath,
   isAFile,
   isADirectory,
-  readDirectory,
+  readDirectory, //codigo asincrono
   isMd,
-  readAFile,
+  readAFile, //codigo asincrono
   extractLinks,
-  verifyLinks,
+  verifyLinks, // codigo asincrono
 } = require("./functions");
 
 function mdLinks(path, options) {
@@ -66,11 +66,11 @@ function mdLinks(path, options) {
       reject("La ruta no existe");
     }
   });
- return newPromise;
+  return newPromise;
 }
 
-const path = "prueba";
-const options = { validate: false };
+const path = "C:/Users/wader/Documents/DEV006-md-links/prueba/texto.md";
+const options = { validate: true };
 const resultFunction = mdLinks(path, options);
 console.log(resultFunction, "resultado funcion");
 resultFunction
@@ -80,7 +80,6 @@ resultFunction
   .catch(function (error) {
     console.log(error);
   });
-
 
 module.exports = {
   mdLinks,

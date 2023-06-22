@@ -89,7 +89,6 @@ const extractLinks = (data, file) => {
 };
 //function para validar los links
 const verifyLinks = (links) => {
-  //console.log(links);
   const arrayPromise = links.map((link) => {
     return new Promise((resolve, reject) => {
       fetch(link.href)
