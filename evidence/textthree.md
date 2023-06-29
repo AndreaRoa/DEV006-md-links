@@ -32,17 +32,4 @@ esto es un texto de prueba
 
 
 
-        //     result.map((link) => {
-        //       readAFile(link)
-        //         .then((result) => {
-        //           const extract = extractLinks(result, link);
-        //           if (options.validate === false) {
-        //             resolve(extract);
-        //           } else {
-        //             resolve(verifyLinks(extract));
-        //           }
-        //         })
-        //         .catch(reject);
-        //     });
-        //   
-        //   .catch(()=>{reject("Carpeta sin archivos")});
+   

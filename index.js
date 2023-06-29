@@ -10,6 +10,8 @@ const {
   extractLinks,
   verifyLinks, // codigo asincrono
 } = require("./functions");
+const fs = require("fs");
+const path = require("path");
 
 function mdLinks(path, options) {
   const newPromise = new Promise(function (resolve, reject) {
@@ -20,33 +22,44 @@ function mdLinks(path, options) {
         const resultIsMd = isMd(resolveIsAbsolute);
 
         if (resultIsMd === false) {
-          reject("Error: El archivo no tiene la extension .md");
+          return "the file does not have the .md extension";
         }
 
         readAFile(resolveIsAbsolute)
           .then((result) => {
             const extract = extractLinks(result, resolveIsAbsolute);
             if (options.validate === false) {
-              resolve(extract);
+              return extract;
             } else {
-              resolve(verifyLinks(extract));
+              verifyLinks(extract)
+                .then((result) => {
+                  resolve(result);
+                })
+                .catch((error) => {
+                  resolve(error);
+                });
             }
           })
-          .catch(reject);
+          .catch(() => {
+            return "hubo problemas al leer el archivo";
+          });
       }
-
       if (isADirectory(resolveIsAbsolute)) {
         readDirectory(resolveIsAbsolute)
           .then((result) => {
             const promises = result.map((link) =>
-              readAFile(link).then((result) => {
-                const extract = extractLinks(result, link);
-                if (options.validate === false) {
-                  return extract;
-                } else {
-                  return verifyLinks(extract);
-                }
-              })
+              readAFile(link)
+                // .then((result) => {
+                //   const extract = extractLinks(result, link);
+                //   if (options.validate === false) {
+                //     return extract;
+                //   } else {
+                //     return verifyLinks(extract);
+                //   }
+                // })
+                // .catch(() => {
+                //   return "Hubo problemas al leer el archivo: " + link;
+                // })
             );
 
             Promise.all(promises)
@@ -55,31 +68,29 @@ function mdLinks(path, options) {
                 resolve(flattenedResult);
               })
               .catch(() => {
-                reject("La carpeta no contiene archivos .md");
+                return "La carpeta no contiene archivos .md";
               });
           })
           .catch(() => {
-            reject("Error al leer el directorio");
+            return "Error al leer el directorio";
           });
       }
     } else {
-      reject("La ruta no existe");
+      return new Error("Path does not exist");
     }
   });
   return newPromise;
 }
 
-const path = "C:/Users/wader/Documents/DEV006-md-links/prueba/texto.md";
-const options = { validate: true };
-const resultFunction = mdLinks(path, options);
-console.log(resultFunction, "resultado funcion");
-resultFunction
-  .then(function (result) {
-    console.log(result, "es esteee:");
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// const path = "C:/Users/wader/Documents/DEV006-md-links/evidence";
+// const options = { validate: true };
+// mdLinks(path, options)
+//   .then(function (result) {
+//     console.log(result, "este es el resultado");
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 module.exports = {
   mdLinks,
