@@ -30,7 +30,7 @@ const isADirectory = (route) => fs.statSync(route).isDirectory();
 const readDirectory = (route) => {
   return new Promise((resolve, reject) => {
     fs.readdir(route, "utf8", (error, routes) => {
-      if (error) {
+      if (routes.length === 0) {
         reject("Not has file.");
       } else {
         const arrayRoute = [];
@@ -87,14 +87,13 @@ const extractLinks = (data, file) => {
   });
   return allLinks;
 };
-// const pathAbsolute = "C:/Users/wader/Documents/DEV006-md-links/evidence/text.md";
-// readAFile(pathAbsolute)
-//   .then(function (result) {
-//    console.log( extractLinks(result,pathAbsolute))
-//   })
-//   .catch(function (error) {
-//     console.log(error);
-//   });
+const textMarkdown = `[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado ligero muy popular entre developers. Es usado en muchísimas plataformas que manejan texto plano (GitHub, foros, blogs, ...) y es muy común.
+
+Dentro de una comunidad de código abierto, nos han propuesto crear una herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos en formato \`Markdown\`, para verificar los links que contengan y reportar algunas estadísticas.`;
+
+const routeWithoutPath = "C:/Users/wader/Documents/DEV006-md-links/evidence/text.md";
+
+//console.log(extractLinks(textMarkdown, routeWithoutPath));
 
 //function para validar los links
 const verifyLinks = (links) => {
@@ -124,26 +123,9 @@ const verifyLinks = (links) => {
         });
     });
   });
-  // console.log(arrayPromise)
   return Promise.all(arrayPromise);
 };
-// const prueba = [
-//   {
-//     href: "tps://developer.mozilla.org/es/docs/Web/HTTP/Messages",
-//     text: "Mensajes HTTP - MDN",
-//     file: "prueba",
-//   },
-//   {
-//     href: "https://developer.mozilla.org/es/docs/Web/HTTP/Status",
-//     text: "Códigos de estado de respuesta HTTP - MDN",
-//     file: "prueba",
-//   },
-//   {
-//     href: "https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5",
-//     text: "The Complete Guide to Status Codes for Meaningful ",
-//     file: "prueba",
-//   },
-// ];
+
 module.exports = {
   isAbsolute,
   converterAbsolute,
