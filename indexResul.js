@@ -87,7 +87,7 @@
 //                 console.log(arrayValidaciones);
 //                 arrayValidaciones.then((resultValidaciones) => {
 //                    return resultValidaciones;
-//                  // resolve(resultValidaciones);
+//                  resolve(resultValidaciones);
 //                 });
 //               });
 //               console.log(result, "aqui es");
@@ -97,24 +97,24 @@
 //               })
 //             }
            
-//             // Promise.all(promises)
-//             //   .then((result) => {
-//             //     const flattenedResult = result.flat();
-//             //     if(options.validate === false) {
-//             //       resolve (flattenedResult);
-//             //     }
-//             //     else{
-//             //       verifyLinks(flattenedResult)
-//             //       .then((resultArray)=>{
-//             //         console.log(resultArray);
-//             //         resolve(resultArray)})
-//             //       .catch((error)=>{reject(error)})
-//             //     }
+//             Promise.all(promises)
+//               .then((result) => {
+//                 const flattenedResult = result.flat();
+//                 if(options.validate === false) {
+//                   resolve (flattenedResult);
+//                 }
+//                 else{
+//                   verifyLinks(flattenedResult)
+//                   .then((resultArray)=>{
+//                     console.log(resultArray);
+//                     resolve(resultArray)})
+//                   .catch((error)=>{reject(error)})
+//                 }
 
-//             //   })
-//             //   .catch(() => {
-//             //     reject ("La carpeta no contiene archivos .md");
-//             //   });
+//               })
+//               .catch(() => {
+//                 reject ("La carpeta no contiene archivos .md");
+//               });
 //           })
 //           .catch(() => {
 //             reject("Error al leer el directorio");

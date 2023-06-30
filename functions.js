@@ -8,6 +8,7 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 //biblioteca para analizar y renderizar markdown
 const markdownIt = require("markdown-it");
+const axios = require("axios");
 
 const colors = require("colors");
 
@@ -36,17 +37,16 @@ const readDirectory = (route) => {
         const arrayRoute = [];
         routes.forEach((file) => {
           const resultExt = path.extname(file);
-                  if (resultExt === ".md") {
+          if (resultExt === ".md") {
             const routeAbsolute = path.resolve(route, file);
             arrayRoute.push(routeAbsolute);
           }
         });
         resolve(arrayRoute);
-           }
+      }
     });
   });
 };
-
 
 //validar la extensión
 const isMd = (route) => {
@@ -87,19 +87,13 @@ const extractLinks = (data, file) => {
   });
   return allLinks;
 };
-const textMarkdown = `[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado ligero muy popular entre developers. Es usado en muchísimas plataformas que manejan texto plano (GitHub, foros, blogs, ...) y es muy común.
-
-Dentro de una comunidad de código abierto, nos han propuesto crear una herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos en formato \`Markdown\`, para verificar los links que contengan y reportar algunas estadísticas.`;
-
-const routeWithoutPath = "C:/Users/wader/Documents/DEV006-md-links/evidence/text.md";
-
-//console.log(extractLinks(textMarkdown, routeWithoutPath));
 
 //function para validar los links
 const verifyLinks = (links) => {
   const arrayPromise = links.map((link) => {
     return new Promise((resolve, reject) => {
-      fetch(link.href)
+      axios
+        .get(link.href)
         .then((response) => {
           const arrayResult = {
             Ruta: link.file,
@@ -108,7 +102,6 @@ const verifyLinks = (links) => {
             Code: response.status === 200 ? 200 : 400,
             Status: response.status === 200 ? "OK" : "FAIL",
           };
-          //console.log(colors.red.bgBlue('Hello world!'));
           resolve(arrayResult);
         })
         .catch((error) => {
@@ -116,14 +109,18 @@ const verifyLinks = (links) => {
             Ruta: link.file,
             Text: link.text,
             Link: link.href,
-            Code: error.name,
+            Code: error.response ? error.response.status : "ERROR",
             Status: error.message,
           };
           resolve(arrayResult);
         });
     });
   });
-  return Promise.all(arrayPromise);
+
+  return Promise.all(arrayPromise).catch((error) => {
+    // Manejar cualquier error no manejado aquí
+    throw new Error("There was an error validating the links");
+  });
 };
 
 module.exports = {

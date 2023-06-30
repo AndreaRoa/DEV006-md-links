@@ -10,18 +10,19 @@ const {
   extractLinks,
   verifyLinks, // codigo asincrono
 } = require("./functions");
-
-
+const axios = require("axios");
 function mdLinks(filePath, options) {
   const newPromise = new Promise(function (resolve, reject) {
-    const resolveIsAbsolute = isAbsolute(filePath) ? filePath : converterAbsolute(filePath);
+    const resolveIsAbsolute = isAbsolute(filePath)
+      ? filePath
+      : converterAbsolute(filePath);
 
     if (existPath(resolveIsAbsolute)) {
       if (isAFile(resolveIsAbsolute)) {
         const resultIsMd = isMd(resolveIsAbsolute);
 
         if (resultIsMd === false) {
-          reject(new Error("the file does not have the .md extension"));
+          reject("The file does not have the .md extension");
           return;
         }
 
@@ -31,11 +32,17 @@ function mdLinks(filePath, options) {
             if (options.validate === false) {
               resolve(extract);
             } else {
-              resolve(verifyLinks(extract));
+              verifyLinks(extract)
+                .then((validatedLinks) => {
+                  resolve(validatedLinks);
+                })
+                .catch((error) => {
+                  reject("There was an error validating the links");
+                });
             }
           })
           .catch((error) => {
-            reject(new Error("There was an error reading the file"));
+            reject("There was an error reading the file");
           });
       } else if (isADirectory(resolveIsAbsolute)) {
         readDirectory(resolveIsAbsolute)
@@ -44,41 +51,50 @@ function mdLinks(filePath, options) {
               readAFile(link)
                 .then((result) => {
                   const extract = extractLinks(result, link);
-                  if (options.validate === false) {
-                    return extract;
-                  } else {
-                    return verifyLinks(extract);
-                  }
+                  return extract;
                 })
                 .catch(() => {
                   return "There was an error reading the file: " + link;
                 })
             );
 
-            Promise.all(promises)
-              .then((result) => {
-                const flattenedResult = result.flat();
-                resolve(flattenedResult);
-              })
-              .catch(() => {
-                reject(new Error("The folder does not contain .md files"));
-              });
+            if (options.validate === false) {
+              Promise.all(promises)
+                .then((result) => {
+                  const flattenedResult = result.flat();
+                  resolve(flattenedResult);
+                })
+                .catch(() => {
+                  reject("La carpeta no contiene archivos .md");
+                });
+            } else {
+              Promise.all(promises)
+                .then((result) => {
+                  const flattenedResult = result.flat();
+                  return verifyLinks(flattenedResult);
+                })
+                .then((validatedLinks) => {
+                  resolve(validatedLinks);
+                })
+                .catch(() => {
+                  reject("La carpeta no contiene archivos .md");
+                });
+            }
           })
           .catch(() => {
-            reject(new Error("Error reading the directory"));
+            reject("Error al leer el directorio");
           });
       }
     } else {
       reject("Path does not exist");
     }
   });
-
   return newPromise;
 }
 
-const filePath = "C:/Users/wader/Documents/DEV006-md-links/evidence/text.md";
-const options = { validate: false };
-mdLinks(filePath, options)
+pathWhitoudMd = "C:\\Users\\wader\\Documents\\DEV006-md-links\\evidence\\text.md";
+const options = { validate: true };
+mdLinks(pathWhitoudMd, options)
   .then(function (result) {
     console.log(result, "este es el resultado");
   })

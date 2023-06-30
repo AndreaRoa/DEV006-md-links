@@ -53,12 +53,13 @@ describe("mdLinks", () => {
 
     return expect(mdLinks(pathBroken)).rejects.toEqual("Path does not exist");
   });
-  // it ("should return an error when path does not have .md extension",()=>{
-  //   const pathWhitoudMd = "C:\\Users\\wader\\Documents\\DEV006-md-links\\evidence\\text.html";
-  //   expect(mdLinks(pathWhitoudMd))
-  //   .rejects.toEqual("the file does not have the .md extension")
-  //   .then(done);
-  // });
+  it("should return an error when path does not have .md extension", () => {
+    const pathWhitoudMd =
+      "C:\\Users\\wader\\Documents\\DEV006-md-links\\evidence\\text.html";
+    return expect(mdLinks(pathWhitoudMd)).rejects.toEqual(
+      "The file does not have the .md extension"
+    );
+  });
 });
 
 describe("read Directory", () => {
