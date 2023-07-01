@@ -96,21 +96,21 @@ const verifyLinks = (links) => {
         .get(link.href)
         .then((response) => {
           const arrayResult = {
-            Ruta: link.file,
-            Text: link.text,
-            Link: link.href,
-            Code: response.status === 200 ? 200 : 400,
-            Status: response.status === 200 ? "OK" : "FAIL",
+            href: link.file,
+            text: link.text,
+            file: link.href,
+            status: response.status === 200 ? 200 : 400,
+            ok: response.status === 200 ? "OK" : "FAIL",
           };
           resolve(arrayResult);
         })
         .catch((error) => {
           const arrayResult = {
-            Ruta: link.file,
-            Text: link.text,
-            Link: link.href,
-            Code: error.response ? error.response.status : "ERROR",
-            Status: error.message,
+            href: link.file,
+            text: link.text,
+            file: link.href,
+            status: error.response ? error.response.status : "ERROR",
+            ok: error.message,
           };
           resolve(arrayResult);
         });

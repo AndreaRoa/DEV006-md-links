@@ -8,3 +8,12 @@ herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos
 en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas.
 
+function messageIcon(message) {
+    if (message === 'ok') {
+      return '✅';
+    } else if (message === 'fail') {
+      return '❎';
+    } else {
+      return '🚫';
+    }
+  }

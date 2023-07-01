@@ -92,15 +92,15 @@ function mdLinks(filePath, options) {
   return newPromise;
 }
 
-pathWhitoudMd = "C:\\Users\\wader\\Documents\\DEV006-md-links\\evidence\\text.md";
-const options = { validate: true };
-mdLinks(pathWhitoudMd, options)
-  .then(function (result) {
-    console.log(result, "este es el resultado");
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// pathWhitoudMd = "C:\\Users\\wader\\Documents\\DEV006-md-links\\evidence\\text.md";
+// const options = { validate: true };
+// mdLinks(pathWhitoudMd, options)
+//   .then(function (result) {
+//     console.log(result, "este es el resultado");
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 module.exports = {
   mdLinks,
