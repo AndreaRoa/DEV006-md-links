@@ -30,6 +30,9 @@
   "directories": {
     "test": "test"
   },
+  "bin": {
+    "md-links": "./cli.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
