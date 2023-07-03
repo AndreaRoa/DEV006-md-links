@@ -8,6 +8,7 @@ const {
 } = require("../functions.js");
 const path = require("path");
 const fs = require("fs");
+const { default: axios } = require("axios");
 const pathExample = ".\\evidence\\text.md";
 const absolutePath = path.resolve(pathExample);
 const routeCoverted = absolutePath.replace(/\\/g, "/");
@@ -27,8 +28,8 @@ describe("mdLinks", () => {
 
     return mdLinks(routeCoverted, optionsTrue).then((result) => {
       result.forEach((link) => {
-        expect(link).toHaveProperty("Code");
-        expect(link).toHaveProperty("Status");
+        expect(link).toHaveProperty("code");
+        expect(link).toHaveProperty("status");
       });
     });
   });
