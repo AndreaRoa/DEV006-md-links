@@ -17,7 +17,7 @@ const example = [
 function brokenLinks(arrayOfObjects) {
   let broken = 0;
   arrayOfObjects.map((element) => {
-    if (element.message === "fail") {
+    if (element.message === "fail" || element.status === 400 || element.status === 404) {
       broken++;
     }
   });
@@ -44,26 +44,10 @@ function uniqueLinks(arrayOfObjects) {
   });
   return linksArr.length;
 }
-// console.log(uniqueLinks(example));
-// function simpleStats(arrayOfObjects) {
-//   const totalLinks = linksQty(arrayOfObjects);
-//   const unique = uniqueLinks(arrayOfObjects);
 
-//   return `Total: ${totalLinks}\nUnique: ${unique}`;
-// }
-
-// function complementStats(arrayOfObjects) {
-//   const totalLinks = linksTotal(arrayOfObjects);
-//   const unique = uniqueLinks(arrayOfObjects);
-//   const broken = brokenLinks(arrayOfObjects);
-
-//   return `Total: ${totalLinks}\nUnique: ${unique}\nBroken: ${broken}`;
-// }
 
 module.exports = {
     brokenLinks,
     linksTotal,
     uniqueLinks,
-//   simpleStats,
-//   complementStats,
 };
