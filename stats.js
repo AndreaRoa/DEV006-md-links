@@ -38,8 +38,8 @@ function linksTotal(arrayOfObjects) {
 function uniqueLinks(arrayOfObjects) {
   let linksArr = [];
   arrayOfObjects.map((element) => {
-    if (!linksArr.includes(element.href)) {
-      linksArr.push(element.href);
+    if (!linksArr.includes(element.file)) {
+      linksArr.push(element.file);
     }
   });
   return linksArr.length;
