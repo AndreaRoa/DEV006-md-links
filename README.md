@@ -1,6 +1,6 @@
 
-  <img src="md-links.png" alt="md-links" width="100%" />
-
+![md-links](./assets/mdLinks.png)
+# md-links--andreroa
 
 ## Table of contents
 * [1. Introduction](#1-introduction)
@@ -14,13 +14,13 @@ This is an npm package for extracting and analyzing links from Markdown files. I
 To install the package, use the following command:
 
 ```
-npm install md-links-AndreaRoa 
+npm install md-links--andreroa
 ```
 
 To install the command line globally, run: 
 
 ```
-npm install -g md-links-Andrea Roa
+npm install -g md-links--andreroa
 ```
 
 ## Usage 

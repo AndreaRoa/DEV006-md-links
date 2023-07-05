@@ -10,7 +10,6 @@ const { JSDOM } = require("jsdom");
 const markdownIt = require("markdown-it");
 const axios = require("axios");
 
-const colors = require("colors");
 
 //validar ruta si es absoluta
 const isAbsolute = (route) => path.isAbsolute(route);
