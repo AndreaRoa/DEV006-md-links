@@ -23,11 +23,7 @@ const isAFile = (route) => fs.statSync(route).isFile();
 
 //es un directorio
 const isADirectory = (route) => fs.statSync(route).isDirectory();
-// leer archivos de un directorio
-// validar archivos si hay
-// si hay , iterar por cada uno
-//volver el archivo en ruta absoluta
-// ir uniendo por .push las rutas de los archivos del directorio .
+
 const readDirectory = (route) => {
   return new Promise((resolve, reject) => {
     fs.readdir(route, "utf8", (error, routes) => {
@@ -91,7 +87,7 @@ const extractLinks = (data, file) => {
 //function para validar los links
 const verifyLinks = (links) => {
   const arrayPromise = links.map((link) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       axios
         .get(link.href)
         .then((response) => {
