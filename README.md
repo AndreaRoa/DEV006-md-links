@@ -1,6 +1,6 @@
 
 ![md-links](./assets/mdLinks.png)
-# md-links--andreroa
+# md-links-andreroa
 
 ## Table of contents
 * [1. Introduction](#1-introduction)
